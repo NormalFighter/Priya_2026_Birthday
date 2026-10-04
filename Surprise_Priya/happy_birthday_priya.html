@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday Priya! 🎉</title>
+    
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Load Canvas Confetti Library for bug-free, high-quality effects -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    
+    <!-- Load Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Lato:wght@300;400;700&family=Playfair+Display:ital,wght@0,500;0,700;1,500&display=swap" rel="stylesheet">
+
+    <!-- Custom Tailwind Configuration -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'rose-gold': '#b76e79',
+                        'soft-pink': '#ffb6c1',
+                        'blush': '#fff0f5',
+                        'champagne': '#f7e7ce'
+                    },
+                    fontFamily: {
+                        'cursive': ['"Dancing Script"', 'cursive'],
+                        'serif': ['"Playfair Display"', 'serif'],
+                        'sans': ['"Lato"', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Smooth scrolling for the whole page */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Custom Animations */
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+
+        @keyframes pulse-glow {
+            0% { box-shadow: 0 0 15px rgba(183, 110, 121, 0.4); }
+            50% { box-shadow: 0 0 30px rgba(183, 110, 121, 0.8); }
+            100% { box-shadow: 0 0 15px rgba(183, 110, 121, 0.4); }
+        }
+
+        @keyframes open-lid {
+            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(-50px) rotate(15deg); opacity: 0; pointer-events: none; }
+        }
+
+        .animate-float {
+            animation: float 4s ease-in-out infinite;
+        }
+
+        .gift-wrapper {
+            position: relative;
+            width: 150px;
+            height: 150px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .gift-wrapper:hover {
+            transform: scale(1.05);
+        }
+
+        .gift-box {
+            position: absolute;
+            bottom: 0;
+            width: 150px;
+            height: 120px;
+            background: linear-gradient(135deg, #b76e79, #d495a0);
+            border-radius: 12px;
+            box-shadow: inset -5px -5px 15px rgba(0,0,0,0.1), 0 10px 20px rgba(0,0,0,0.2);
+        }
+
+        /* The vertical ribbon */
+        .gift-box::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 30px;
+            height: 100%;
+            background: linear-gradient(to bottom, #f7e7ce, #e6d2b5);
+            box-shadow: 0 0 5px rgba(0,0,0,0.1);
+        }
+
+        .gift-lid {
+            position: absolute;
+            top: 5px;
+            left: -5px;
+            width: 160px;
+            height: 40px;
+            background: linear-gradient(135deg, #a55a65, #b76e79);
+            border-radius: 8px;
+            box-shadow: 0 5px 10px rgba(0,0,0,0.2);
+            z-index: 10;
+            transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        /* The horizontal ribbon on the lid */
+        .gift-lid::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 30px;
+            height: 100%;
+            background: linear-gradient(to bottom, #f7e7ce, #e6d2b5);
+        }
+
+        /* The bow */
+        .gift-bow {
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 30px;
+            z-index: 11;
+            transition: all 0.5s ease;
+        }
+        
+        .gift-bow::before, .gift-bow::after {
+            content: '';
+            position: absolute;
+            width: 35px;
+            height: 25px;
+            border: 5px solid #f7e7ce;
+            border-radius: 50px 50px 0 50px;
+            top: 0;
+        }
+        
+        .gift-bow::before {
+            left: -15px;
+            transform: rotate(-30deg);
+        }
+        
+        .gift-bow::after {
+            right: -15px;
+            transform: rotate(30deg) scaleX(-1);
+            border-radius: 50px 50px 50px 0;
+        }
+
+        .is-open .gift-lid {
+            animation: open-lid 1s forwards;
+        }
+        .is-open .gift-bow {
+            animation: open-lid 1s forwards;
+        }
+        
+        .glassmorphism {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+        
+        .photo-frame {
+            background-color: white;
+            padding: 12px 12px 40px 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .photo-frame:hover {
+            transform: translateY(-10px) rotate(2deg);
+            box-shadow: 0 20px 30px rgba(0,0,0,0.15);
+        }
+    </style>
+</head>
+<body class="bg-blush font-sans text-gray-800 overflow-x-hidden selection:bg-rose-gold selection:text-white">
+
+    <!-- Hero Section -->
+    <header id="hero" class="relative min-h-screen flex flex-col items-center justify-center text-center px-4 overflow-hidden">
+        
+        <!-- Background decorative blobs -->
+        <div class="absolute top-[-10%] left-[-10%] w-96 h-96 bg-soft-pink rounded-full mix-blend-multiply filter blur-3xl opacity-50 animate-float"></div>
+        <div class="absolute bottom-[-10%] right-[-10%] w-96 h-96 bg-champagne rounded-full mix-blend-multiply filter blur-3xl opacity-50 animate-float" style="animation-delay: 2s;"></div>
+
+        <div class="relative z-10 space-y-8 flex flex-col items-center max-w-4xl mx-auto">
+            <h2 class="text-rose-gold font-serif text-xl md:text-2xl tracking-widest uppercase mb-[-1rem]">To my Best Friend</h2>
+            <h1 class="font-cursive text-7xl md:text-9xl text-transparent bg-clip-text bg-gradient-to-r from-rose-gold via-pink-500 to-rose-gold py-2">
+                Happy Birthday <br/> Priya!
+            </h1>
+            <p class="text-lg md:text-xl text-gray-600 font-light max-w-lg mt-4">
+                I got you a little something...
+            </p>
+
+            <!-- Digital Gift Box -->
+            <div id="gift-container" class="mt-12 mb-8 animate-float" onclick="openGift()">
+                <div class="gift-wrapper" style="animation: pulse-glow 3s infinite rounded-xl;">
+                    <div class="gift-box"></div>
+                    <div class="gift-lid" id="gift-lid"></div>
+                    <div class="gift-bow" id="gift-bow"></div>
+                </div>
+            </div>
+            
+            <p id="click-instruction" class="text-sm text-rose-gold font-medium uppercase tracking-widest animate-pulse cursor-pointer" onclick="openGift()">
+                Click to open your gift
+            </p>
+        </div>
+    </header>
+
+    <!-- Main Content (Hidden initially) -->
+    <main id="main-content" class="hidden opacity-0 transition-opacity duration-1000 ease-in-out pb-24 relative z-10 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
+        
+        <!-- Heartfelt Message Section -->
+        <section class="mt-12 md:mt-24 mb-24">
+            <div class="glassmorphism rounded-3xl p-8 md:p-14 shadow-2xl relative overflow-hidden text-center max-w-3xl mx-auto">
+                <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-rose-gold via-soft-pink to-rose-gold"></div>
+                
+                <h3 class="font-serif text-3xl md:text-4xl text-rose-gold mb-6">Chellam Priya,</h3>
+                
+                <div class="space-y-6 text-gray-700 font-sans text-lg md:text-xl leading-relaxed font-light">
+                    <p>
+                        Unna mathiri oru best friend kedachathukku naan romba kuduthu vechirukkanum. Namma late-night loose thanamana conversations, vayira valikka siricha moments, aprom enna prechana vanthalum en pakkabalama nikkurathu... nee en ovvoru naalayum special aakkidra.
+                    </p>
+                    <p>
+                        Unna suthi irukkura ellarukkume nee oru periya positive vibe tharra. Unnoda anbu, caring nature, aprom un thairiyam ithu ellam paathu naan romba proud-a feel pandren.
+                    </p>
+                    <p>
+                        Intha pirandhanaal unakku romba romba sirappana naala amaiyanum. Nee nenaikurathu ellam nadakkanum. Innum vara pora varushangalil namma onna sernthu neraya azhagana memories create pannanum. Happy Birthday!
+                    </p>
+                </div>
+                
+                <div class="mt-10">
+                    <p class="font-cursive text-4xl text-rose-gold">Love you lots,</p>
+                    <p class="mt-2 font-serif text-gray-500 italic">Un Best Friend</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Memories Gallery -->
+        <section class="mb-12">
+            <div class="text-center mb-12">
+                <h2 class="font-cursive text-5xl md:text-6xl text-rose-gold">Our Favorite Memories</h2>
+                <p class="text-gray-500 mt-3 font-light">A little trip down memory lane...</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+                <!-- Memory 1 -->
+                <div class="photo-frame flex flex-col items-center">
+                    <div class="w-full h-64 bg-gray-200 rounded overflow-hidden relative group">
+                        <img src="img/Priya1.jpg" alt="Party Memory" class="w-full h-full object-cover transition duration-500 group-hover:scale-110">
+                    </div>
+                    <p class="font-cursive text-2xl text-gray-700 mt-6 -mb-4">The Best Day With You!</p>
+                </div>
+
+                <!-- Memory 2 -->
+                <div class="photo-frame flex flex-col items-center md:mt-12">
+                    <div class="w-full h-64 bg-gray-200 rounded overflow-hidden relative group">
+                        <img src="img/Priya2.jpg" alt="Friendship Memory" class="w-full h-full object-cover transition duration-500 group-hover:scale-110">
+                    </div>
+                    <p class="font-cursive text-2xl text-gray-700 mt-6 -mb-4">Very good day of the Wedding</p>
+                </div>
+
+                <!-- Memory 3 -->
+                <div class="photo-frame flex flex-col items-center">
+                    <div class="w-full h-64 bg-gray-200 rounded overflow-hidden relative group">
+                        <img src="img/Priya3.jpg" alt="Travel Memory" class="w-full h-full object-cover transition duration-500 group-hover:scale-110">
+                    </div>
+                    <p class="font-cursive text-2xl text-gray-700 mt-6 -mb-4">Best memory</p>
+                </div>
+            </div>
+        </section>
+        
+        <footer class="text-center mt-20 text-gray-400 font-light text-sm">
+            <p>Made with ❤️ for Priya's Special Day</p>
+        </footer>
+    </main>
+
+    <script>
+        let isOpened = false;
+
+        function openGift() {
+            if (isOpened) return; // Prevent multiple clicks
+            isOpened = true;
+
+            // 1. Animate Gift Box Lid
+            const giftContainer = document.getElementById('gift-container');
+            const clickInstruction = document.getElementById('click-instruction');
+            
+            giftContainer.classList.add('is-open');
+            clickInstruction.style.opacity = '0';
+            clickInstruction.style.pointerEvents = 'none';
+
+            // 2. Fire Confetti
+            fireConfetti();
+
+            // 3. Reveal Main Content
+            setTimeout(() => {
+                const mainContent = document.getElementById('main-content');
+                mainContent.classList.remove('hidden');
+                
+                // Trigger reflow
+                void mainContent.offsetWidth; 
+                
+                mainContent.classList.remove('opacity-0');
+                mainContent.classList.add('opacity-100');
+
+                // Smooth scroll to the letter after a short delay
+                setTimeout(() => {
+                    mainContent.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 800);
+
+            }, 1000); // Wait for lid to pop open before revealing
+        }
+
+        function fireConfetti() {
+            const count = 250;
+            const defaults = {
+                origin: { y: 0.7 },
+                colors: ['#b76e79', '#ffb6c1', '#f7e7ce', '#ffffff', '#ff69b4']
+            };
+
+            function fire(particleRatio, opts) {
+                confetti(Object.assign({}, defaults, opts, {
+                    particleCount: Math.floor(count * particleRatio)
+                }));
+            }
+
+            // A beautiful fireworks-style confetti sequence
+            fire(0.25, {
+                spread: 26,
+                startVelocity: 55,
+            });
+            fire(0.2, {
+                spread: 60,
+            });
+            fire(0.35, {
+                spread: 100,
+                decay: 0.91,
+                scalar: 0.8
+            });
+            fire(0.1, {
+                spread: 120,
+                startVelocity: 25,
+                decay: 0.92,
+                scalar: 1.2
+            });
+            fire(0.1, {
+                spread: 120,
+                startVelocity: 45,
+            });
+            
+            // Continuous gentle fall for a few seconds
+            let end = Date.now() + (3 * 1000);
+            let colors = ['#b76e79', '#ffb6c1'];
+
+            (function frame() {
+                confetti({
+                    particleCount: 3,
+                    angle: 60,
+                    spread: 55,
+                    origin: { x: 0 },
+                    colors: colors
+                });
+                confetti({
+                    particleCount: 3,
+                    angle: 120,
+                    spread: 55,
+                    origin: { x: 1 },
+                    colors: colors
+                });
+
+                if (Date.now() < end) {
+                    requestAnimationFrame(frame);
+                }
+            }());
+        }
+    </script>
+</body>
+</html>
